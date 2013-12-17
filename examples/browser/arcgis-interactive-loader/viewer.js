@@ -3,8 +3,9 @@ require([
   "esri/map",
   "esri/symbols/SimpleFillSymbol", 
   "esri/symbols/SimpleLineSymbol",
-  "dojo/_base/Color"
-], function (query, Map, SimpleFillSymbol, SimpleLineSymbol, Color) {
+  "dojo/_base/Color",
+  "esri/InfoTemplate"
+], function (query, Map, SimpleFillSymbol, SimpleLineSymbol, Color, InfoTemplate) {
 
   var map = new esri.Map("map", {
     basemap: "topo",
@@ -20,24 +21,27 @@ require([
   var currentPrimitive;
   var shape;
 
+  // Add GeoJSON
   function showGeoJSON(geojson){
     // convert the geojson object to a arcgis json representation
     currentPrimitive = new Terraformer.Primitive(geojson);
     var arcgis = Terraformer.ArcGIS.convert(currentPrimitive);
     for (var i=0; i < arcgis.length; i++){
-      addGraphic(arcgis[i], new Color([255,255,0,0.25]));
+      addGraphic(arcgis[i], new Color([255,255,0,0.25]),"GeoJSON");
     }
   }
 
+  // Add WKT
   function showWKT(wkt){
     currentPrimitive = Terraformer.WKT.parse(wkt);
     var arcgis = Terraformer.ArcGIS.convert(currentPrimitive);
-    addGraphic(arcgis, new Color([255,0,255,0.25]));
+    addGraphic(arcgis, new Color([255,0,255,0.25]),"WKT");
   }
 
+  // Add ArcGIS JSON
   function showArcGIS(arcgis){
     currentPrimitive = Terraformer.ArcGIS.parse(arcgis);
-    addGraphic(arcgis, new Color([0,255,255,0.25]));
+    addGraphic(arcgis, new Color([0,255,255,0.25]),"ArcGIS JSON");
   }
 
   function getSymbol(color) {
@@ -47,7 +51,7 @@ require([
     return sfs;
   }
 
-  function addGraphic(arcgis,color){
+  function addGraphic(arcgis,color,type){
     // if arcgis.geometry is set we have a graphic json
     // else we can create our own json and set the symbol on it.
     if(arcgis.geometry){
@@ -58,20 +62,27 @@ require([
       }).setSymbol(getSymbol(color));
     }
 
+    var infoTemplate = new InfoTemplate();
+    infoTemplate.setTitle(type);
+    infoTemplate.setContent("This was converted from text!");
+    shape.setInfoTemplate(infoTemplate);
+
     // add the graphic to the map
     map.graphics.add(shape);
 
     // center the map on the graphic
-    map.setExtent(shape.geometry.getExtent().expand(1.2));
+    map.setExtent(shape.geometry.getExtent().expand(1.5));
+
+    map.infoWindow.hide();
+    //map.setExtent(map.graphics.getExtent().expand(1.2));
   }
 
   function showOnMap(){
-    map.graphics.clear();
+    //map.graphics.clear();
 
     // parse the input as json
     var input = query(".tab-pane.active textarea").attr("value")[0];
     var type = query(".tab-pane.active textarea").attr("data-type")[0];
-
 
     switch(type){
     case "wkt":
@@ -138,6 +149,7 @@ require([
   query("#bounding").on("click", showBBoxOnMap);
   query("#convex").on("click", showConvexOnMap);
   query("#clear").on("click", function(){
+    map.infoWindow.hide();
     map.graphics.clear();
   });
 });
