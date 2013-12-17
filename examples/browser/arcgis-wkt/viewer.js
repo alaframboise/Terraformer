@@ -2,8 +2,7 @@ require([
   "dojo/query",
   "esri/map",
   "esri/symbols/SimpleLineSymbol",
-  "esri/graphic",
-  "dojo/domReady!"
+  "esri/graphic"
 ], function (query, Map, SimpleLineSymbol, Graphic) {
 
   var map = new Map("map", {
