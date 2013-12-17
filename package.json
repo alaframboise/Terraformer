@@ -1,6 +1,6 @@
 {
-  "name": "Terraformer",
-  "version": "1.0.0",
+  "name": "terraformer",
+  "version": "1.0.2",
   "description": "A Geo-toolkit built in Javascript.",
   "main": "terraformer.js",
   "devDependencies": {
@@ -11,14 +11,9 @@
     "grunt-contrib-jasmine": "~0.4.2",
     "grunt-jasmine-node": "https://github.com/magicmoose/grunt-jasmine-node/tarball/master",
     "grunt-template-jasmine-istanbul": "~0.2.4",
-    "docpad-plugin-marked": "~2.1.1",
-    "docpad-plugin-eco": "~2.0.2",
-    "docpad-plugin-ghpages": "~2.3.0",
-    "docpad-plugin-highlightjs": "~2.1.7",
-    "docpad-plugin-cleanurls": "~2.5.1",
-    "docpad-plugin-partials": "~2.8.0",
-    "docpad-plugin-nodesass": "~2.0.2",
-    "docpad": "~6.52.1"
+    "grunt-s3": "~0.2.0-alpha.3",
+    "grunt-gh-pages": "~0.8.1",
+    "grunt-middleman": "~0.1.0"
   },
   "scripts": {
     "test": "grunt test"
